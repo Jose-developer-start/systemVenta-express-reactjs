@@ -6,10 +6,34 @@ import Navigation from '../components/Navigation'
 import { getProduct,saveProduct,updateProduct,destroyProduct,getByIdProduct } from '../API/producto.js';
 import Table from '../components/product/Table';
 import Form from '../components/product/Form';
+//Toastify
+import { toast } from 'react-toastify';
 
 export default function Product() {
     const [data,setData] = useState([]) //Obtiene todos los datos de productos
     const [stateEdit,setStateEdit] = useState(false)
+    const notifySuccess = (message)=> {
+        toast.success(message, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            });
+    }
+    const notifyError = (message)=> {
+        toast.error(message, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            });
+    }
     const [form,setForm] = useState({
         id: '',
         producto: '',
@@ -17,6 +41,25 @@ export default function Product() {
         stock: '',
         precio: ''
     })
+    const validationForm = (form)=>{
+        if(!form.producto) {
+            notifyError('Nombre de producto vacio')
+            return false;
+        }
+        if(!form.descripcion) {
+            notifyError('descripción vacia'); return false
+        }
+        if(!form.stock) {
+            notifyError('Ingrese un stock')
+            return false
+        }
+        if(!form.precio) {
+            notifyError('Ingrese un precio')
+            return false
+        }
+        return true
+
+    }
     const getProductos = async()=>{
         const result = await getProduct()
         setData(result)
@@ -39,19 +82,23 @@ export default function Product() {
 
     const onSubmit = async(e,id)=>{
         e.preventDefault();
-        if(stateEdit === true){
-             updateProduct(id,form)
-            setStateEdit(false)  
-        }else{
-            saveProduct(form)
-        } 
+        if(validationForm(form)){
 
-        setForm({
-            producto: '',
-            descripcion: '',
-            stock: '',
-            precio: ''
-        })
+            if(stateEdit === true){
+                 updateProduct(id,form)
+                setStateEdit(false)  
+            }else{
+                saveProduct(form)
+                notifySuccess('Producto agregado')
+            } 
+    
+            setForm({
+                producto: '',
+                descripcion: '',
+                stock: '',
+                precio: ''
+            })
+        }
     }
     //edit product
     const editProduct = async(id)=>{        
@@ -87,6 +134,8 @@ export default function Product() {
                     <Table data={data} editProduct={editProduct} deleteProduct={deleteProduct} />
                 </div>
             </div>
+            <div>
+      </div>
         </div>
     </>
 

@@ -6,7 +6,8 @@ import Navigation from '../components/Navigation'
 import { getClient,saveClient,updateClient,destroyClient,getByIdClient } from '../API/cliente.js';
 import Table from '../components/client/Table';
 import Form from '../components/client/Form';
-
+//Toastify
+import {toast} from "react-toastify"
 export default function Client() {
     const [data,setData] = useState([]) //Obtiene todos los datos de productos
     const [stateEdit,setStateEdit] = useState(false)
@@ -36,23 +37,69 @@ export default function Client() {
         setForm({...form,...newData})
         
     } 
+    //Notificaicones toastify
+    const notifySuccess = (message)=> {
+        toast.success(message, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            });
+    }
+    const notifyError = (message)=> {
+        toast.error(message, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            });
+    }
+
+    const validationForm = (form)=>{
+        if(!form.nombre) {
+            notifyError('Ingrese un nombre')
+            return false;
+        }
+        if(!form.apellido) {
+            notifyError('Ingrese un apellido'); return false
+        }
+        if(!form.dui) {
+            notifyError('Ingrese un DNI')
+            return false
+        }
+        if(!form.fecha_nacimiento) {
+            notifyError('Ingrese un año de nacimiento')
+            return false
+        }
+        return true
+
+    }
 
     const onSubmit = async(e,id)=>{
         e.preventDefault();
-        if(stateEdit === true){
-             updateClient(id,form)
-            setStateEdit(false)  
-        }else{
-            saveClient(form)
-        } 
-
-        setForm({
-            id: '',
-            nombre: '',
-            apellido: '',
-            dui: '',
-            fecha_nacimiento: ''
-        })
+        if(validationForm(form)){
+            if(stateEdit === true){
+                updateClient(id,form)
+               setStateEdit(false)  
+           }else{
+               saveClient(form)
+               notifySuccess('Cliente registrado')
+           } 
+   
+           setForm({
+               id: '',
+               nombre: '',
+               apellido: '',
+               dui: '',
+               fecha_nacimiento: ''
+           })
+        }
     }
     //edit cliente
     const editClient = async(id)=>{        

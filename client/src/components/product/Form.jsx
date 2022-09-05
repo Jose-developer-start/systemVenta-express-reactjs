@@ -1,5 +1,4 @@
 import React from "react";
-
 export default function Form({onSubmit,onChange,cancelEdit,stateEdit,form}) {
   return (
     <div className="card shadow-lg p-3">
