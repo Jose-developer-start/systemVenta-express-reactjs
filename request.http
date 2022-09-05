@@ -1,8 +1,8 @@
 ###
-GET http://localhost:5000/api/productos HTTP/1.1
+GET http://localhost:5000/api/clientes HTTP/1.1
 
 ###
-GET http://localhost:5000/api/productos/1 HTTP/1.1
+GET http://localhost:5000/api/clientes/1 HTTP/1.1
 
 ###
 POST http://localhost:5000/api/productos HTTP/1.1

@@ -14,7 +14,7 @@ Esta app realiza lo siguiente:
 git clone https://github.com/Jose-developer-start/systemVenta-express-reactjs.git
 cd systemVenta-express-reactjs
 npm i
-npm run dev //Correr server API# run in development mode
+npm run dev //Correr server API # run in development mode
 npm start //Correr reactjs # run in production mode
 ```
 
