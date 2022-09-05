@@ -20,7 +20,7 @@ export default function Table({data,editProduct,deleteProduct}) {
             <td>{producto.producto}</td>
             <td>{producto.descripcion}</td>
             <td>{producto.stock}</td>
-            <td>{producto.precio}</td>
+            <td>${producto.precio}</td>
             <td>
               <div className="row">
                 <button
