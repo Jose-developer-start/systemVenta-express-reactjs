@@ -18,7 +18,7 @@ npm run dev //Correr server API# run in development mode
 npm start //Correr reactjs # run in production mode
 ```
 
-> You need to have Mongodb installed Locally or stablish a MONGODB_URI environment variable in order to connect to any mongodb instance (using Mongodb Atlas for example)
+> Gestor recomendado para MySQL (phpMyAdmin) or MariaDB Server
 
 ### Requisitos
 

@@ -2,7 +2,9 @@ import React from "react";
 
 export default function Form({onSubmit,onChange,cancelEdit,stateEdit,form}) {
   return (
-    <form action="" onSubmit={(e) => onSubmit(e, form.id)} method="POST">
+    <div className="card shadow-lg p-3">
+        <div className="card-header p-1 py-2">Agregar producto</div>
+        <form action="" onSubmit={(e) => onSubmit(e, form.id)} method="POST">
       <div className="form-group">
         <label htmlFor="">Producto: </label>
         <input
@@ -63,5 +65,6 @@ export default function Form({onSubmit,onChange,cancelEdit,stateEdit,form}) {
         </>
       )}
     </form>
+    </div>
   );
 }
