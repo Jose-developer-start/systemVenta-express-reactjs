@@ -2,18 +2,23 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Navigation from '../components/Navigation'
+//Import request API
+import { getProduct,saveProduct,updateProduct,destroyProduct,getByIdProduct } from '../API/producto.js';
+import Table from '../components/product/Table';
+import Form from '../components/product/Form';
 
 export default function Product() {
-    const [data,setData] = useState([])
+    const [data,setData] = useState([]) //Obtiene todos los datos de productos
+    const [stateEdit,setStateEdit] = useState(false)
     const [form,setForm] = useState({
+        id: '',
         producto: '',
         descripcion: '',
-        stock: 0,
-        precio: 0
+        stock: '',
+        precio: ''
     })
     const getProductos = async()=>{
-        const res = await fetch('http://localhost:5000/api/productos');
-        const result = await res.json();
+        const result = await getProduct()
         setData(result)
     }
     useEffect(()=>{
@@ -32,15 +37,14 @@ export default function Product() {
         
     } 
 
-    const onSubmit = async(e)=>{
-        e.preventDefault(); 
-        fetch('http://localhost:5000/api/productos',{
-            method: 'POST',
-            body: JSON.stringify(form),
-            headers: {
-                'Content-Type': 'Application/json'
-            }
-        })
+    const onSubmit = async(e,id)=>{
+        e.preventDefault();
+        if(stateEdit === true){
+             updateProduct(id,form)
+            setStateEdit(false)  
+        }else{
+            saveProduct(form)
+        } 
 
         setForm({
             producto: '',
@@ -48,7 +52,26 @@ export default function Product() {
             stock: '',
             precio: ''
         })
-        console.log('Datos almacenados')
+    }
+    //edit product
+    const editProduct = async(id)=>{        
+        const getProduct = await getByIdProduct(id)
+        setForm({...getProduct[0]})
+        setStateEdit(true)
+
+    }
+    const cancelEdit = ()=>{
+        setForm({
+            producto: '',
+            descripcion: '',
+            stock: '',
+            precio: ''
+        })
+        setStateEdit(false)
+    }
+    //delete product
+    const deleteProduct = (id)=>{
+        destroyProduct(id)
     }
 
   return (
@@ -58,50 +81,10 @@ export default function Product() {
         <div className="container my-5">
             <div className="row">
                 <div className="col-sm-12 col-md-4">
-                    <form action="" onSubmit={(e)=> onSubmit(e)}>
-                        <div className="form-group">
-                            <label htmlFor="">Producto: </label>
-                            <input name='producto' onChange={(e)=> onChange(e)} type="text" className="form-control" value={form.producto} />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="">Descripcion: </label>
-                            <textarea name="descripcion" onChange={(e)=> onChange(e)} className='form-control' value={form.descripcion}></textarea>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="">Stock: </label>
-                            <input name='stock' type="number" onChange={(e)=> onChange(e)} className="form-control" value={form.stock} />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="">Producto: </label>
-                            <input name='precio' step=".01" onChange={(e)=> onChange(e)} type="number" className="form-control" value={form.precio} />
-                        </div>
-                        <button type='submit'>Guardar</button>
-                    </form>
+                    <Form cancelEdit={cancelEdit} stateEdit={stateEdit} onChange={onChange} onSubmit={onSubmit} form={form} />
                 </div>
                 <div className="col-sm-12 col-md-8">
-                    <table className="table table-responsive-sm">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Producto</th>
-                                <th>Descripcion</th>
-                                <th>Stock</th>
-                                <th>Precio</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            { data.map((producto, index) => (
-                                <tr key={index}>
-                                    <td>{ producto.id }</td>
-                                    <td>{ producto.producto }</td>
-                                    <td>{ producto.descripcion }</td>
-                                    <td>{ producto.stock }</td>
-                                    <td>{ producto.precio }</td>
-                                </tr>
-                            )) }
-                        </tbody>
-                    </table>
+                    <Table data={data} editProduct={editProduct} deleteProduct={deleteProduct} />
                 </div>
             </div>
         </div>
